@@ -23,7 +23,7 @@ public class TransportProblem {
      */
     public static void main(String[] args) {
         float[] dilers = new float[]{4, 5, 4, 5};
-        float[] customers = new float[]{3, 8, 4, 3};
+        float[] customers = new float[]{3, 8, 3, 3};
         float[][] prices = new float[][]{{3, 4, 1, 2}, {2, 2, 4, 3}, {1, 1, 2, 1}, {1, 1, 1, 1}};
         TransportProblem tp = new TransportProblem(dilers, customers, prices, SupportPlan.METHOD_MINIMUM_ELEMENT);
         tp.solveProblem();
@@ -174,6 +174,41 @@ public class TransportProblem {
     }
 
     public void solveProblem() {
+        int i = 0, j = 0;
+        float[][] helpMatr = new float[dilers.length][customers.length];
+        for (i = 0; i < dilers.length; i++) {
+            for (j = 0; i < customers.length; j++) {
+                if (supportPlan[i][j] != 0) {
+                    helpMatr[i][j] = prices[i][j];
+                } else {
+                    helpMatr[i][j] = Float.NaN;
+                }
+            }
+        }
+        float[] U = new float[dilers.length];
+        float[] V = new float[customers.length];
+        findUV(U, V, helpMatr);
+    }
+
+    private void findUV(float[] U, float[] V, float[][] helpMatr) {
+        boolean[] U1 = new boolean[dilers.length];
+        boolean[] U2 = new boolean[dilers.length];
+        boolean[] V1 = new boolean[customers.length];
+        boolean[] V2 = new boolean[customers.length];
+        while (!(ArrayUtils.isAllValuesTrue(V1) && ArrayUtils.isAllValuesTrue(U1))) {
+            int i = -1;
+            int j = -1;
+            for (int i1 = customers.length - 1; i1 >= 0; i1--) {
+                if (V1[i1] && !V2[i1]) {
+                    i = i1;
+                }
+            }
+            for (int j1 = dilers.length - 1; j1 >= 0; j1--) {
+                if (U1[j1] && !U2[j1]) {
+                    j = j1;
+                }
+            }
+        }
     }
 
     private float getCost(float[][] plan) {

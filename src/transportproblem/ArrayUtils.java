@@ -13,6 +13,15 @@ import java.util.Arrays;
  */
 public class ArrayUtils {
 
+    public static boolean isAllValuesTrue(boolean[] array) {
+        for (boolean x : array) {
+            if (x == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static int getNoZeroValuesCount(float[][] array) {
         int count = 0;
         for (int i = 0; i < array.length; i++) {

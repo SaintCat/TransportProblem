@@ -4,9 +4,14 @@
  */
 package transportproblem;
 
+import java.util.Enumeration;
+import java.util.Vector;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -24,7 +29,7 @@ public class MainViewPanel extends javax.swing.JDialog {
     public MainViewPanel(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        dilersModel = new javax.swing.table.DefaultTableModel(new Object[][]{}, new String[]{"Отправитель"}) {
+        dilersModel = new MyDefaultTableModel(new Object[][]{}, new String[]{"Отправитель"}) {
             Class[] types = new Class[]{
                 java.lang.Float.class
             };
@@ -34,7 +39,7 @@ public class MainViewPanel extends javax.swing.JDialog {
                 return types[columnIndex];
             }
         };
-        customersModel = new javax.swing.table.DefaultTableModel(new Object[][]{}, new String[]{"Получатель"}) {
+        customersModel = new MyDefaultTableModel(new Object[][]{}, new String[]{"Получатель"}) {
             Class[] types = new Class[]{
                 java.lang.Float.class
             };
@@ -44,7 +49,7 @@ public class MainViewPanel extends javax.swing.JDialog {
                 return types[columnIndex];
             }
         };
-        pricesModel = new javax.swing.table.DefaultTableModel(new Object[][]{}, new String[]{}) {
+        pricesModel = new MyDefaultTableModel(new Object[][]{}, new String[]{}) {
             Class[] types = new Class[]{
                 java.lang.Float.class
             };
@@ -57,6 +62,65 @@ public class MainViewPanel extends javax.swing.JDialog {
         dilersTable.setModel(dilersModel);
         customersTable.setModel(customersModel);
         pricesTable.setModel(pricesModel);
+//        dilersSpinner.addChangeListener(new ChangeListener() {
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//                if ((Integer) dilersSpinner.getValue() < 0) {
+//                    dilersSpinner.setValue(0);
+//                    return;
+//                }
+//                Integer value = (Integer) dilersSpinner.getValue();
+//                int diff = value - dilersModel.getRowCount();
+//                if (diff > 0) {
+//                    for (int i = 0; i < diff; i++) {
+//                        dilersModel.addRow(new Object[]{0});
+//                        Integer[] data = new Integer[pricesModel.getColumnCount()];
+//                        for (int k = 0; k < data.length; k++) {
+//                            data[k] = k;
+//                        }
+//                        pricesModel.addRow(data);
+//                    }
+//                } else if (diff < 0) {
+//                    for (int i = 0; i < -diff; i++) {
+//                        dilersModel.removeRow(dilersModel.getRowCount() - 1);
+//                        pricesModel.removeRow(pricesModel.getRowCount() - 1);
+//                    }
+//                }
+//            }
+//        });
+//        customersSpinner.addChangeListener(new ChangeListener() {
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//                if ((Integer) customersSpinner.getValue() < 0) {
+//                    customersSpinner.setValue(0);
+//                    return;
+//                }
+//                Integer value = (Integer) customersSpinner.getValue();
+//                int diff = value - customersModel.getRowCount();
+//                if (diff > 0) {
+//                    for (int i = 0; i < diff; i++) {
+//                        customersModel.addRow(new Object[]{0});
+//                        final Integer[] data = new Integer[pricesModel.getRowCount()];
+//                        for (int k = 0; k < pricesModel.getRowCount(); k++) {
+//                            data[k] = k;
+//                        }
+//                        SwingUtilities.invokeLater(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                pricesModel.addColumn(pricesModel.getColumnCount());
+//                            }
+//                        });
+//
+//                    }
+//                } else if (diff < 0) {
+//                    for (int i = 0; i < -diff; i++) {
+//                        customersModel.removeRow(customersModel.getRowCount() - 1);
+//                        removeColumnAndData(pricesTable, pricesModel.getColumnCount() - 1);
+//                    }
+//                }
+//
+//            }
+//        });
         dilersSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -100,6 +164,49 @@ public class MainViewPanel extends javax.swing.JDialog {
 
             }
         });
+    }
+
+    class MyDefaultTableModel extends DefaultTableModel {
+
+        public MyDefaultTableModel(Object[][] data, Object[] columnNames) {
+            super(data, columnNames);
+        }
+
+        public Vector getColumnIdentifiers() {
+            return columnIdentifiers;
+        }
+    }
+
+    public void removeColumnAndData(JTable table, int vColIndex) {
+        MyDefaultTableModel model = (MyDefaultTableModel) table.getModel();
+        TableColumn col = table.getColumnModel().getColumn(vColIndex);
+        int columnModelIndex = col.getModelIndex();
+        Vector data = model.getDataVector();
+        Vector colIds = model.getColumnIdentifiers();
+
+        // Remove the column from the table
+        table.removeColumn(col);
+
+        // Remove the column header from the table model
+        colIds.removeElementAt(columnModelIndex);
+
+        // Remove the column data
+        for (int r = 0; r < data.size(); r++) {
+            Vector row = (Vector) data.get(r);
+            row.removeElementAt(columnModelIndex);
+        }
+        model.setDataVector(data, colIds);
+
+        // Correct the model indices in the TableColumn objects
+        // by decrementing those indices that follow the deleted column
+        Enumeration en = table.getColumnModel().getColumns();
+        for (; en.hasMoreElements();) {
+            TableColumn c = (TableColumn) en.nextElement();
+            if (c.getModelIndex() >= columnModelIndex) {
+                c.setModelIndex(c.getModelIndex() - 1);
+            }
+        }
+        model.fireTableStructureChanged();
     }
 
     /**
