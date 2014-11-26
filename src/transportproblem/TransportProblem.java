@@ -28,8 +28,8 @@ public class TransportProblem {
     public static void main(String[] args) {
         float[] dilers = new float[]{50, 23, 10};
         float[] customers = new float[]{20, 20, 43};
-        float[][] prices = new float[][]{{10,5,4}, {6,4,5}, {7,3,6}};
-        TransportProblem tp = new TransportProblem(dilers, customers, prices, SupportPlan.METHOD_NORTWEST_ANGLE);
+        float[][] prices = new float[][]{{10, 5, 4}, {6, 4, 5}, {7, 3, 6}};
+        TransportProblem tp = new TransportProblem(dilers, customers, prices, SupportPlan.METHOD_MINIMUM_ELEMENT);
         float[][] ff = tp.solveProblem();
         System.out.println("Оптимальный план: ");
         ArrayUtils.printArray(ff);
@@ -54,9 +54,9 @@ public class TransportProblem {
 
             float[][] pricesCopy = prices;
             prices = new float[dilers.length][customers.length];
-//            for (int i = 0; i < pricesCopy.length - 1; i++) {
-//                System.arraycopy(pricesCopy[i], 0, prices[i], 0, pricesCopy[i].length);
-//            }
+            for (int i = 0; i < pricesCopy.length - 1; i++) {
+                System.arraycopy(pricesCopy[i], 0, prices[i], 0, pricesCopy[i].length);
+            }
         } else if (diff < 0) {
             float[] arrCopy = dilers;
             dilers = new float[arrCopy.length + 1];
@@ -65,9 +65,9 @@ public class TransportProblem {
 
             float[][] pricesCopy = prices;
             prices = new float[dilers.length][customers.length];
-//            for (int i = 0; i < pricesCopy.length; i++) {
-//                System.arraycopy(pricesCopy[i], 0, prices[i], 0, pricesCopy[i].length);
-//            }
+            for (int i = 0; i < pricesCopy.length; i++) {
+                System.arraycopy(pricesCopy[i], 0, prices[i], 0, pricesCopy[i].length);
+            }
         }
         ArrayUtils.printArray(dilers);
         ArrayUtils.printArray(customers);
@@ -116,7 +116,7 @@ public class TransportProblem {
         boolean[][] notYetChecked = new boolean[dilers.length][customers.length];
         trueForAllValues(notYetChecked);
         while (!(ArrayUtils.isAllEmpty(dilersCopy) && ArrayUtils.isAllEmpty(customersCopy))) {
-            Point point = findMinElement(notYetChecked, prices);
+            Point point = findElement(notYetChecked, prices, false);
             i = point.x;
             j = point.y;
             float dif = Math.min(dilersCopy[i], customersCopy[j]);
@@ -142,19 +142,61 @@ public class TransportProblem {
         return result;
     }
 
-    private Point findMinElement(boolean[][] notYetChecked, float[][] prices) {
+    private float[][] maxElementMethod() {
+        float[] dilersCopy = dilers;
+        float[] customersCopy = customers;
+        float[][] result = new float[dilers.length][customers.length];
+        int i = 0, j = 0;
+        boolean[][] notYetChecked = new boolean[dilers.length][customers.length];
+        trueForAllValues(notYetChecked);
+        while (!(ArrayUtils.isAllEmpty(dilersCopy) && ArrayUtils.isAllEmpty(customersCopy))) {
+            Point point = findElement(notYetChecked, prices, true);
+            i = point.x;
+            j = point.y;
+            float dif = Math.min(dilersCopy[i], customersCopy[j]);
+            result[i][j] += dif;
+            dilersCopy[i] -= dif;
+            customersCopy[j] -= dif;
+            if (dilersCopy[i] == 0) {
+                int k = 0;
+                while (k < customers.length) {
+                    notYetChecked[i][k] = false;
+                    k++;
+                }
+            }
+            if (customersCopy[j] == 0) {
+                int k = 0;
+                while (k < dilers.length) {
+                    notYetChecked[k][j] = false;
+                    k++;
+                }
+            }
+        }
+        ArrayUtils.zeroToNan(result);
+        return result;
+    }
+
+    private Point findElement(boolean[][] notYetChecked, float[][] prices, boolean isFindMax) {
 
         //firstly find no zero min value
-        float min = Float.MAX_VALUE;
+        float element= prices[0][0];
         int indexI = -1;
         int indexJ = -1;
         for (int i = 0; i < prices.length; i++) {
             for (int j = 0; j < prices[i].length; j++) {
-                if (notYetChecked[i][j] && prices[i][j] != 0 && prices[i][j] < min) {
-                    min = prices[i][j];
-                    indexI = i;
-                    indexJ = j;
-                }
+//                if (!isFindMax) {
+                    if (notYetChecked[i][j] && prices[i][j] != 0 && prices[i][j] < element) {
+                        element = prices[i][j];
+                        indexI = i;
+                        indexJ = j;
+                    }
+//                } else {
+//                    if (notYetChecked[i][j] && prices[i][j] != 0 && prices[i][j] > element) {
+//                        element = prices[i][j];
+//                        indexI = i;
+//                        indexJ = j;
+//                    }
+//                }
             }
         }
         //if indedI,J == -1 we only have zero values
@@ -196,14 +238,9 @@ public class TransportProblem {
         float[] U = new float[dilers.length];
         float[] V = new float[customers.length];
         findUV(U, V, helpMatr);
-//        ArrayUtils.printArray(U);
-//        ArrayUtils.printArray(V);
-        
         float[][] SMatr = makeSMatr(helpMatr, U, V);
-        ArrayUtils.printArray(SMatr);
-        
+
         while (!ArrayUtils.isAllPositive(SMatr)) {
-            System.out.println("ASDSDSd");
             roll(supportPlan, SMatr);
             for (i = 0; i < dilers.length; i++) {
                 for (j = 0; j < customers.length; j++) {

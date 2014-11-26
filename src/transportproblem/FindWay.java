@@ -25,7 +25,6 @@ public class FindWay {
         flag = _flag;
         root = new Point(x, y);
         mAllowed = _mAllowed;
-        System.out.println(mAllowed.length);
         father = _Father;
     }
 
