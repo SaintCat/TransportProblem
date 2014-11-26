@@ -52,10 +52,10 @@ public class FindWay {
         childrens = new FindWay[Count];
         int k = 0;
         for (int i = 0; i < Count; i++) {
-            if (ps[i] == root) {
+            if (ps[i].equals(root)) {
                 continue;
             }
-            if (ps[i] == beginning) {
+            if (ps[i].equals(beginning)) {
                 while (fwu != null) {
                     mAllowed[k] = fwu.root;
                     fwu = fwu.father;
@@ -80,13 +80,9 @@ public class FindWay {
 
     private static boolean isAllStartPoints(Point[] points) {
         for (Point point : points) {
-            if (point != null) {
                 if (point.x != 0 || point.y != 0) {
                     return false;
                 }
-            } else {
-                return false;
-            }
         }
         return true;
     }
