@@ -6,7 +6,6 @@
 package transportproblem;
 
 import java.awt.Point;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,9 @@ public class TransportProblem {
     private float[] customers;
     private float[][] prices;
     private float[][] supportPlan;
+    private float[][] supportPlanOrigional;
     private Point[] allowedPoints;
+    private boolean isSeachingForMaximum;
 
     /**
      * @param args the command line arguments
@@ -29,17 +30,18 @@ public class TransportProblem {
         float[] dilers = new float[]{50, 23, 10};
         float[] customers = new float[]{20, 20, 43};
         float[][] prices = new float[][]{{10, 5, 4}, {6, 4, 5}, {7, 3, 6}};
-        TransportProblem tp = new TransportProblem(dilers, customers, prices, SupportPlan.METHOD_MINIMUM_ELEMENT);
+        TransportProblem tp = new TransportProblem(dilers, customers, prices, SupportPlan.METHOD_MINIMUM_ELEMENT, false);
         float[][] ff = tp.solveProblem();
         System.out.println("Оптимальный план: ");
         ArrayUtils.printArray(ff);
         System.out.println(tp.getCost(ff));
     }
 
-    public TransportProblem(float[] nDilers, float[] nCustomers, float[][] nPrices, SupportPlan plan) {
+    public TransportProblem(float[] nDilers, float[] nCustomers, float[][] nPrices, SupportPlan plan, boolean isSeachingForMaximum) {
         this.dilers = nDilers;
         this.customers = nCustomers;
         this.prices = nPrices;
+        this.isSeachingForMaximum = isSeachingForMaximum;
 
         float dilersSum = ArrayUtils.getNumberSumInArray(nDilers);
         float customersSum = ArrayUtils.getNumberSumInArray(nCustomers);
@@ -75,13 +77,19 @@ public class TransportProblem {
         if (plan.equals(SupportPlan.METHOD_NORTWEST_ANGLE)) {
             supportPlan = nordWestAngle();
         } else {
-            supportPlan = minElementMethod();
+            supportPlan = minMaxElementMethod();
         }
-        System.out.println("Начальный опорный план: ");
-        ArrayUtils.printArray(supportPlan);
+        supportPlanOrigional = new float[supportPlan.length][supportPlan[0].length];
+        for (int i = 0; i < supportPlan.length; i++) {
+                System.arraycopy(supportPlan[i], 0, supportPlanOrigional[i], 0, supportPlan[i].length);
+            }
         System.out.println(getCost(supportPlan));
         System.out.println("m + n - 1: " + (dilers.length + customers.length - 1));
         System.out.println("Число базисных клеток: " + ArrayUtils.getNoZeroValuesCount(supportPlan));
+    }
+
+    public float[][] getSupportPlane() {
+        return supportPlanOrigional;
     }
 
     private float[][] nordWestAngle() {
@@ -108,7 +116,7 @@ public class TransportProblem {
         return result;
     }
 
-    private float[][] minElementMethod() {
+    private float[][] minMaxElementMethod() {
         float[] dilersCopy = dilers;
         float[] customersCopy = customers;
         float[][] result = new float[dilers.length][customers.length];
@@ -116,7 +124,7 @@ public class TransportProblem {
         boolean[][] notYetChecked = new boolean[dilers.length][customers.length];
         trueForAllValues(notYetChecked);
         while (!(ArrayUtils.isAllEmpty(dilersCopy) && ArrayUtils.isAllEmpty(customersCopy))) {
-            Point point = findElement(notYetChecked, prices, false);
+            Point point = findElement(notYetChecked, prices);
             i = point.x;
             j = point.y;
             float dif = Math.min(dilersCopy[i], customersCopy[j]);
@@ -142,61 +150,33 @@ public class TransportProblem {
         return result;
     }
 
-    private float[][] maxElementMethod() {
-        float[] dilersCopy = dilers;
-        float[] customersCopy = customers;
-        float[][] result = new float[dilers.length][customers.length];
-        int i = 0, j = 0;
-        boolean[][] notYetChecked = new boolean[dilers.length][customers.length];
-        trueForAllValues(notYetChecked);
-        while (!(ArrayUtils.isAllEmpty(dilersCopy) && ArrayUtils.isAllEmpty(customersCopy))) {
-            Point point = findElement(notYetChecked, prices, true);
-            i = point.x;
-            j = point.y;
-            float dif = Math.min(dilersCopy[i], customersCopy[j]);
-            result[i][j] += dif;
-            dilersCopy[i] -= dif;
-            customersCopy[j] -= dif;
-            if (dilersCopy[i] == 0) {
-                int k = 0;
-                while (k < customers.length) {
-                    notYetChecked[i][k] = false;
-                    k++;
-                }
-            }
-            if (customersCopy[j] == 0) {
-                int k = 0;
-                while (k < dilers.length) {
-                    notYetChecked[k][j] = false;
-                    k++;
-                }
-            }
-        }
-        ArrayUtils.zeroToNan(result);
-        return result;
-    }
-
-    private Point findElement(boolean[][] notYetChecked, float[][] prices, boolean isFindMax) {
+    private Point findElement(boolean[][] notYetChecked, float[][] prices) {
 
         //firstly find no zero min value
-        float element= prices[0][0];
+        float element;
+        if (isSeachingForMaximum) {
+            element = Float.MIN_VALUE;
+        } else {
+            element = Float.MAX_VALUE;
+        }
+
         int indexI = -1;
         int indexJ = -1;
         for (int i = 0; i < prices.length; i++) {
             for (int j = 0; j < prices[i].length; j++) {
-//                if (!isFindMax) {
-                    if (notYetChecked[i][j] && prices[i][j] != 0 && prices[i][j] < element) {
+                if (!isSeachingForMaximum) {
+                    if (notYetChecked[i][j] && prices[i][j] != 0 && prices[i][j] <= element) {
                         element = prices[i][j];
                         indexI = i;
                         indexJ = j;
                     }
-//                } else {
-//                    if (notYetChecked[i][j] && prices[i][j] != 0 && prices[i][j] > element) {
-//                        element = prices[i][j];
-//                        indexI = i;
-//                        indexJ = j;
-//                    }
-//                }
+                } else {
+                    if (notYetChecked[i][j] && prices[i][j] != 0 && prices[i][j] >= element) {
+                        element = prices[i][j];
+                        indexI = i;
+                        indexJ = j;
+                    }
+                }
             }
         }
         //if indedI,J == -1 we only have zero values
@@ -416,7 +396,7 @@ public class TransportProblem {
         }
     }
 
-    private float getCost(float[][] plan) {
+    public float getCost(float[][] plan) {
         float sum = 0;
 
         for (int i = 0; i < prices.length; i++) {

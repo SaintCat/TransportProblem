@@ -16,10 +16,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -32,6 +33,8 @@ public class MainViewPanel extends javax.swing.JDialog {
     DefaultTableModel dilersModel;
     DefaultTableModel customersModel;
     DefaultTableModel pricesModel;
+    DefaultTableModel supportPlanModel;
+    DefaultTableModel optimumPlanModel;
 
     /**
      * Creates new form MainViewPanel
@@ -39,6 +42,9 @@ public class MainViewPanel extends javax.swing.JDialog {
     public MainViewPanel(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        pricesTable.setDefaultRenderer(Float.class, centerRenderer);
         dilersModel = new MyDefaultTableModel(new Object[][]{}, new String[]{"Отправитель"}) {
             Class[] types = new Class[]{
                 java.lang.Float.class
@@ -65,9 +71,31 @@ public class MainViewPanel extends javax.swing.JDialog {
                 return Float.class;
             }
         };
+        supportPlanModel = new MyDefaultTableModel(new Object[][]{}, new String[]{}) {
+            Class[] types = new Class[]{
+                java.lang.Float.class
+            };
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                return Float.class;
+            }
+        };
+        optimumPlanModel = new MyDefaultTableModel(new Object[][]{}, new String[]{}) {
+            Class[] types = new Class[]{
+                java.lang.Float.class
+            };
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                return Float.class;
+            }
+        };
         dilersTable.setModel(dilersModel);
         customersTable.setModel(customersModel);
         pricesTable.setModel(pricesModel);
+        supportPlanTable.setModel(supportPlanModel);
+        optimumPlanTable.setModel(optimumPlanModel);
         dilersSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -110,7 +138,9 @@ public class MainViewPanel extends javax.swing.JDialog {
                         for (int k = 0; k < pricesModel.getRowCount(); k++) {
                             data[k] = 0;
                         }
-                        pricesModel.addColumn(pricesModel.getColumnCount(), data);
+                        String name = "Поле " + pricesModel.getColumnCount();
+                        pricesModel.addColumn(name, data);
+                        pricesTable.getColumn(name).setWidth(30);
 
                     }
                 } else if (diff < 0) {
@@ -124,42 +154,41 @@ public class MainViewPanel extends javax.swing.JDialog {
         });
 
         maxRadioBtn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 maxRadioBtn.setSelected(true);
                 minRadioBtn.setSelected(false);
             }
-
         });
         minRadioBtn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 maxRadioBtn.setSelected(false);
                 minRadioBtn.setSelected(true);
             }
-
         });
         nordWestRadioBtn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 nordWestRadioBtn.setSelected(true);
                 minElementRadioBtn.setSelected(false);
             }
-
         });
         minElementRadioBtn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 nordWestRadioBtn.setSelected(false);
                 minElementRadioBtn.setSelected(true);
             }
-
         });
 
+        JTable rowTable = new RowNumberTable(pricesTable);
+        jScrollPane3.setRowHeaderView(rowTable);
+        jScrollPane3.setCorner(JScrollPane.UPPER_LEFT_CORNER,
+                rowTable.getTableHeader());
+        pricesTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        minRadioBtn.setSelected(true);
+        nordWestRadioBtn.setSelected(true);
     }
 
     class MyDefaultTableModel extends DefaultTableModel {
@@ -230,12 +259,14 @@ public class MainViewPanel extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
+        supportPlanTable = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
+        optimumPlanTable = new javax.swing.JTable();
         maxRadioBtn = new javax.swing.JRadioButton();
         minRadioBtn = new javax.swing.JRadioButton();
         nordWestRadioBtn = new javax.swing.JRadioButton();
         minElementRadioBtn = new javax.swing.JRadioButton();
-        jButton2 = new javax.swing.JButton();
+        solveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -332,6 +363,31 @@ public class MainViewPanel extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Ввод данных", jPanel2);
 
+        jScrollPane4.setName("Опорный план"); // NOI18N
+        jScrollPane4.setRequestFocusEnabled(false);
+
+        supportPlanTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        supportPlanTable.setEnabled(false);
+        jScrollPane4.setViewportView(supportPlanTable);
+
+        optimumPlanTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        optimumPlanTable.setEnabled(false);
+        jScrollPane5.setViewportView(optimumPlanTable);
+
         maxRadioBtn.setText("Решать на максимум");
 
         minRadioBtn.setText("Решать на минимум");
@@ -340,10 +396,10 @@ public class MainViewPanel extends javax.swing.JDialog {
 
         minElementRadioBtn.setText("Метод минимального(максимального) элемента");
 
-        jButton2.setText("Решить");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        solveButton.setText("Решить");
+        solveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                solveButtonActionPerformed(evt);
             }
         });
 
@@ -353,9 +409,9 @@ public class MainViewPanel extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(40, 40, 40)
@@ -367,7 +423,7 @@ public class MainViewPanel extends javax.swing.JDialog {
                     .addComponent(minElementRadioBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(nordWestRadioBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(solveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(239, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -376,7 +432,7 @@ public class MainViewPanel extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -387,7 +443,7 @@ public class MainViewPanel extends javax.swing.JDialog {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(minRadioBtn)
                             .addComponent(minElementRadioBtn)))
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE))
+                    .addComponent(solveButton, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE))
                 .addGap(48, 48, 48))
         );
 
@@ -475,20 +531,78 @@ public class MainViewPanel extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void solveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_solveButtonActionPerformed
+        float[] dilers = getDilersTableData();
+        float[] customers = getCustomersTableData();
+        float[][] prices = getPricesTableData();
+        if (dilers.length == 0 || customers.length == 0) {
+            JOptionPane.showMessageDialog(rootPane, "Таблица не заполнена полностью!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        SupportPlan sp = (nordWestRadioBtn.isSelected()) ? SupportPlan.METHOD_NORTWEST_ANGLE : SupportPlan.METHOD_MINIMUM_ELEMENT;
+        TransportProblem tp = new TransportProblem(dilers, customers, prices, sp, maxRadioBtn.isSelected());
+        float[][] optimum = tp.solveProblem();
+        System.out.println("Оптимальный план: ");
+        ArrayUtils.printArray(optimum);
+        System.out.println(tp.getCost(optimum));
+        float[][] supportPlanGet = tp.getSupportPlane();
+        System.out.println("Начальный опорный план: ");
+        ArrayUtils.printArray(supportPlanGet);
+        ArrayUtils.nanToZero(supportPlanGet);
+        Float[][] supportPlane = new Float[supportPlanGet.length][];
+        for (int i = 0; i < supportPlanGet.length; i++) {
+            supportPlane[i] = new Float[supportPlanGet[i].length];
+            supportPlanModel.addColumn("Поле " + i);
+            for (int j = 0; j < supportPlanGet[i].length; j++) {
+                supportPlane[i][j] = supportPlanGet[i][j];
+            }
+        }
+        for (int i = 0; i < supportPlane[0].length; i++) {
+            supportPlanModel.addRow(supportPlane[i]);
+        }
+
+        ArrayUtils.nanToZero(optimum);
+        Float[][] optimumPlan = new Float[optimum.length][];
+        for (int i = 0; i < optimum.length; i++) {
+            optimumPlan[i] = new Float[optimum[i].length];
+            optimumPlanModel.addColumn("Поле " + i);
+            for (int j = 0; j < optimum[i].length; j++) {
+                optimumPlan[i][j] = optimum[i][j];
+            }
+        }
+        for (int i = 0; i < optimumPlan[0].length; i++) {
+            optimumPlanModel.addRow(optimumPlan[i]);
+        }
+    }//GEN-LAST:event_solveButtonActionPerformed
 
     private void showErrorMessage() {
-        JOptionPane.showMessageDialog(rootPane, "ERROR", "ERRoR", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(rootPane, "Формат данных в файле некорректный!", "Ошибка", JOptionPane.ERROR_MESSAGE);
     }
 
-    public float[][] getTableData() {
-        int nRow = dilersModel.getRowCount(), nCol = dilersModel.getColumnCount();
+    public float[] getDilersTableData() {
+        int nRow = dilersModel.getRowCount();
+        float[] tableData = new float[nRow];
+        for (int i = 0; i < nRow; i++) {
+            tableData[i] = Float.valueOf(dilersModel.getValueAt(i, 0).toString());
+        }
+        return tableData;
+    }
+
+    public float[] getCustomersTableData() {
+        int nRow = customersModel.getRowCount();
+        float[] tableData = new float[nRow];
+        for (int i = 0; i < nRow; i++) {
+            tableData[i] = Float.valueOf(customersModel.getValueAt(i, 0).toString());
+        }
+        return tableData;
+    }
+
+    public float[][] getPricesTableData() {
+        int nRow = pricesModel.getRowCount(), nCol = pricesModel.getColumnCount();
         float[][] tableData = new float[nRow][nCol];
         for (int i = 0; i < nRow; i++) {
             for (int j = 0; j < nCol; j++) {
-                tableData[i][j] = Float.valueOf(dilersModel.getValueAt(i, j).toString());
+                tableData[i][j] = Float.valueOf(pricesModel.getValueAt(i, j).toString());
             }
         }
         return tableData;
@@ -536,7 +650,6 @@ public class MainViewPanel extends javax.swing.JDialog {
     private javax.swing.JSpinner dilersSpinner;
     private javax.swing.JTable dilersTable;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -552,6 +665,9 @@ public class MainViewPanel extends javax.swing.JDialog {
     private javax.swing.JRadioButton minElementRadioBtn;
     private javax.swing.JRadioButton minRadioBtn;
     private javax.swing.JRadioButton nordWestRadioBtn;
+    private javax.swing.JTable optimumPlanTable;
     private javax.swing.JTable pricesTable;
+    private javax.swing.JButton solveButton;
+    private javax.swing.JTable supportPlanTable;
     // End of variables declaration//GEN-END:variables
 }

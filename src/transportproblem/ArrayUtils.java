@@ -13,16 +13,26 @@ import java.util.Arrays;
  */
 public class ArrayUtils {
 
-    
+    public static void nanToZero(float[][] array) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                if (Float.isNaN(array[i][j])) {
+                    array[i][j] = 0;
+                }
+            }
+        }
+    }
+
     public static void zeroToNan(float[][] array) {
-        for(int i = 0; i < array.length; i++) {
-            for(int j = 0; j <  array[i].length; j++) {
-                if(array[i][j] == 0) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                if (array[i][j] == 0) {
                     array[i][j] = Float.NaN;
                 }
             }
         }
     }
+
     public static boolean isAllPositive(float[][] array) {
         for (int i = 0; (i < array.length); i++) {
             for (int j = 0; (j < array[i].length); j++) {
