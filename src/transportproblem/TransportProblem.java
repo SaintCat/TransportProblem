@@ -30,10 +30,12 @@ public class TransportProblem {
         float[] dilers = new float[]{50, 23, 10};
         float[] customers = new float[]{20, 20, 43};
         float[][] prices = new float[][]{{10, 5, 4}, {6, 4, 5}, {7, 3, 6}};
-        TransportProblem tp = new TransportProblem(dilers, customers, prices, SupportPlan.METHOD_MINIMUM_ELEMENT, false);
+        TransportProblem tp = new TransportProblem(dilers, customers, prices, SupportPlan.METHOD_MINIMUM_ELEMENT, true);
         float[][] ff = tp.solveProblem();
         System.out.println("Оптимальный план: ");
         ArrayUtils.printArray(ff);
+        ArrayUtils.printArray(tp.getSupportPlane());
+        System.out.println(tp.getCost(tp.getSupportPlane()));
         System.out.println(tp.getCost(ff));
     }
 
@@ -81,8 +83,8 @@ public class TransportProblem {
         }
         supportPlanOrigional = new float[supportPlan.length][supportPlan[0].length];
         for (int i = 0; i < supportPlan.length; i++) {
-                System.arraycopy(supportPlan[i], 0, supportPlanOrigional[i], 0, supportPlan[i].length);
-            }
+            System.arraycopy(supportPlan[i], 0, supportPlanOrigional[i], 0, supportPlan[i].length);
+        }
         System.out.println(getCost(supportPlan));
         System.out.println("m + n - 1: " + (dilers.length + customers.length - 1));
         System.out.println("Число базисных клеток: " + ArrayUtils.getNoZeroValuesCount(supportPlan));
@@ -219,25 +221,50 @@ public class TransportProblem {
         float[] V = new float[customers.length];
         findUV(U, V, helpMatr);
         float[][] SMatr = makeSMatr(helpMatr, U, V);
-
-        while (!ArrayUtils.isAllPositive(SMatr)) {
-            roll(supportPlan, SMatr);
-            for (i = 0; i < dilers.length; i++) {
-                for (j = 0; j < customers.length; j++) {
-                    if (supportPlan[i][j] == Float.POSITIVE_INFINITY) {
-                        helpMatr[i][j] = prices[i][j];
-                        supportPlan[i][j] = 0;
-                        continue;
-                    }
-                    if (!Float.isNaN(supportPlan[i][j])) {
-                        helpMatr[i][j] = prices[i][j];
-                    } else {
-                        helpMatr[i][j] = Float.NaN;
+        System.out.println("Матрица оценок");
+        ArrayUtils.printArray(SMatr);
+        if (isSeachingForMaximum) {
+            while (!ArrayUtils.isAllPositive(SMatr)) {
+                System.err.println("MAXXXXXXXXXXX");
+                roll(supportPlan, SMatr);
+                for (i = 0; i < dilers.length; i++) {
+                    for (j = 0; j < customers.length; j++) {
+                        if (supportPlan[i][j] == Float.POSITIVE_INFINITY) {
+                            helpMatr[i][j] = prices[i][j];
+                            supportPlan[i][j] = 0;
+                            continue;
+                        }
+                        if (!Float.isNaN(supportPlan[i][j])) {
+                            helpMatr[i][j] = prices[i][j];
+                        } else {
+                            helpMatr[i][j] = Float.NaN;
+                        }
                     }
                 }
+                findUV(U, V, helpMatr);
+                SMatr = makeSMatr(helpMatr, U, V);
             }
-            findUV(U, V, helpMatr);
-            SMatr = makeSMatr(helpMatr, U, V);
+        } else {
+            while (!ArrayUtils.isAllPositive(SMatr)) {
+                System.err.println("MINNNNNNNNNNN");
+                roll(supportPlan, SMatr);
+                for (i = 0; i < dilers.length; i++) {
+                    for (j = 0; j < customers.length; j++) {
+                        if (supportPlan[i][j] == Float.POSITIVE_INFINITY) {
+                            helpMatr[i][j] = prices[i][j];
+                            supportPlan[i][j] = 0;
+                            continue;
+                        }
+                        if (!Float.isNaN(supportPlan[i][j])) {
+                            helpMatr[i][j] = prices[i][j];
+                        } else {
+                            helpMatr[i][j] = Float.NaN;
+                        }
+                    }
+                }
+                findUV(U, V, helpMatr);
+                SMatr = makeSMatr(helpMatr, U, V);
+            }
         }
 
         return supportPlan;
@@ -245,7 +272,7 @@ public class TransportProblem {
 
     private void roll(float[][] m, float[][] sm) {
         Point minInd = new Point();
-        float min = Float.MAX_VALUE;
+        float min = isSeachingForMaximum ? Float.MIN_VALUE : Float.MAX_VALUE;
         int k = 0;
         allowedPoints = new Point[dilers.length + customers.length];
         for (int d = 0; d < allowedPoints.length; d++) {
@@ -259,10 +286,18 @@ public class TransportProblem {
                     k++;
                 }
                 // заодно ищем макс по модулю отр элемент
-                if (sm[i][j] < min) {
-                    min = sm[i][j];
-                    minInd.x = i;
-                    minInd.y = j;
+                if (isSeachingForMaximum) {
+                    if (sm[i][j] >= min) {
+                        min = sm[i][j];
+                        minInd.x = i;
+                        minInd.y = j;
+                    }
+                } else {
+                    if (sm[i][j] < min) {
+                        min = sm[i][j];
+                        minInd.x = i;
+                        minInd.y = j;
+                    }
                 }
             }
         }
@@ -273,12 +308,19 @@ public class TransportProblem {
         for (int i = 0; i < bCycles.length; i++) {
             bCycles[i] = i != bCycles.length - 1;
         }
-        min = Float.MAX_VALUE;
+        min = isSeachingForMaximum ? Float.MIN_VALUE : Float.MAX_VALUE;
         for (int i = 0; i < cycle.length; i++) {
             cycles[i] = m[cycle[i].x][cycle[i].y];
-            if ((i % 2 == 0) && (cycles[i] == cycles[i]) && (cycles[i] < min)) {
-                min = cycles[i];
-                minInd = cycle[i];
+            if (isSeachingForMaximum) {
+                if ((i % 2 == 0) && (cycles[i] == cycles[i]) && (cycles[i] >= min)) {
+                    min = cycles[i];
+                    minInd = cycle[i];
+                }
+            } else {
+                if ((i % 2 == 0) && (cycles[i] == cycles[i]) && (cycles[i] < min)) {
+                    min = cycles[i];
+                    minInd = cycle[i];
+                }
             }
             if (cycles[i] != cycles[i]) {
                 cycles[i] = 0;

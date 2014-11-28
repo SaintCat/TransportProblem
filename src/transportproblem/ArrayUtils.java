@@ -43,6 +43,17 @@ public class ArrayUtils {
         }
         return true;
     }
+    
+    public static boolean isAllNegative(float[][] array) {
+        for (int i = 0; (i < array.length); i++) {
+            for (int j = 0; (j < array[i].length); j++) {
+                if (array[i][j] >= 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     public static boolean isAllValuesTrue(boolean[] array) {
         for (boolean x : array) {

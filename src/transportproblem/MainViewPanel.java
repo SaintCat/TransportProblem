@@ -550,6 +550,8 @@ public class MainViewPanel extends javax.swing.JDialog {
         ArrayUtils.printArray(supportPlanGet);
         ArrayUtils.nanToZero(supportPlanGet);
         Float[][] supportPlane = new Float[supportPlanGet.length][];
+        supportPlanModel = new DefaultTableModel();
+        supportPlanTable.setModel(supportPlanModel);
         for (int i = 0; i < supportPlanGet.length; i++) {
             supportPlane[i] = new Float[supportPlanGet[i].length];
             supportPlanModel.addColumn("Поле " + i);
@@ -560,7 +562,8 @@ public class MainViewPanel extends javax.swing.JDialog {
         for (int i = 0; i < supportPlane[0].length; i++) {
             supportPlanModel.addRow(supportPlane[i]);
         }
-
+        optimumPlanModel = new DefaultTableModel();
+        optimumPlanTable.setModel(optimumPlanModel);
         ArrayUtils.nanToZero(optimum);
         Float[][] optimumPlan = new Float[optimum.length][];
         for (int i = 0; i < optimum.length; i++) {
