@@ -146,7 +146,7 @@ public class MainViewPanel extends javax.swing.JDialog {
                         for (int k = 0; k < pricesModel.getRowCount(); k++) {
                             data[k] = 0.0f;
                         }
-                        String name = "Поле " + pricesModel.getColumnCount();
+                        String name = "Поле " + (pricesModel.getColumnCount() + 1);
                         pricesModel.addColumn(name, data);
                         pricesTable.getColumn(name).setWidth(30);
 
@@ -194,6 +194,7 @@ public class MainViewPanel extends javax.swing.JDialog {
         jScrollPane3.setRowHeaderView(rowTable);
         jScrollPane3.setCorner(JScrollPane.UPPER_LEFT_CORNER,
                 rowTable.getTableHeader());
+        
         pricesTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         minRadioBtn.setSelected(true);
         nordWestRadioBtn.setSelected(true);
@@ -629,13 +630,14 @@ public class MainViewPanel extends javax.swing.JDialog {
         float[][] optimum = tp.solveProblem();
         optimumPlanLabel.setText(String.valueOf(tp.getCost(optimum)));
         float[][] supportPlanGet = tp.getSupportPlane();
+        ArrayUtils.nanToZero(supportPlanGet);
         supportPlanLabel.setText(String.valueOf(tp.getCost(supportPlanGet)));
         Float[][] supportPlane = new Float[supportPlanGet.length][];
         supportPlanModel = new DefaultTableModel();
         supportPlanTable.setModel(supportPlanModel);
         for (int i = 0; i < supportPlanGet.length; i++) {
             supportPlane[i] = new Float[supportPlanGet[i].length];
-            supportPlanModel.addColumn("Поле " + i);
+            supportPlanModel.addColumn("Поле " + (i + 1));
             for (int j = 0; j < supportPlanGet[i].length; j++) {
                 supportPlane[i][j] = supportPlanGet[i][j];
             }
