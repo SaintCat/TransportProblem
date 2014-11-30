@@ -6,8 +6,11 @@
 package transportproblem;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -23,18 +26,54 @@ public class TransportProblem {
     private Point[] allowedPoints;
     private boolean isSeachingForMaximum;
 
+//    float[] dilers = new float[]{4, 5, 4, 5};
+//        float[] customers = new float[]{3, 8, 4, 3};
+//        float[][] prices = new float[][]{{3, 4, 1, 2}, {2, 2, 4, 3}, {1, 1, 2, 1}, {1, 1, 1, 1}};
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        float[] dilers = new float[]{50, 23, 10};
-        float[] customers = new float[]{20, 20, 43};
-        float[][] prices = new float[][]{{10, 5, 4}, {6, 4, 5}, {7, 3, 6}};
-        TransportProblem tp = new TransportProblem(dilers, customers, prices, SupportPlan.METHOD_MINIMUM_ELEMENT, true);
+    public static void main(String[] args) throws FileNotFoundException {
+        String[] rows = new Scanner(new File("task.txt")).useDelimiter("\\Z").next().split("\n");
+        if (rows.length != 3) {
+            return;
+        }
+        float[] dil = null;
+        float[] customers = null;
+        float[][] pr = null;
+        for (int i = 0; i < rows.length; i++) {
+            String[] splitted = rows[i].split(" ");
+            float[] tmp = new float[splitted.length];
+            for (int k = 0; k < splitted.length; k++) {
+                Float integ = Float.valueOf(splitted[k]);
+                tmp[k] = integ;
+            }
+            if (i == 0) {
+                dil = tmp;
+            }
+            if (i == 1) {
+                customers = tmp;
+            }
+            if (i == 2) {
+                if (tmp.length != dil.length * customers.length) {
+                    return;
+                }
+                pr = new float[dil.length][];
+                for (int z = 0; z < dil.length; z++) {
+                    pr[z] = new float[customers.length];
+                    for (int j = 0; j < customers.length; j++) {
+                        pr[z][j] = tmp[z * customers.length + j];
+                    }
+                }
+            }
+        }
+
+        TransportProblem tp = new TransportProblem(dil, customers, pr, SupportPlan.METHOD_MINIMUM_ELEMENT, true);
         float[][] ff = tp.solveProblem();
-        System.out.println("Оптимальный план: ");
-        ArrayUtils.printArray(ff);
-        ArrayUtils.printArray(tp.getSupportPlane());
+//
+        System.out.println(
+                "Оптимальный план: ");
+        ArrayUtils.printArray(ff, null);
+
         System.out.println(tp.getCost(tp.getSupportPlane()));
         System.out.println(tp.getCost(ff));
     }
@@ -47,8 +86,6 @@ public class TransportProblem {
 
         float dilersSum = ArrayUtils.getNumberSumInArray(nDilers);
         float customersSum = ArrayUtils.getNumberSumInArray(nCustomers);
-        System.err.println(dilersSum);
-        System.err.println(customersSum);
         float diff = dilersSum - customersSum;
         if (diff > 0) {
             float[] arrCopy = customers;
@@ -58,7 +95,7 @@ public class TransportProblem {
 
             float[][] pricesCopy = prices;
             prices = new float[dilers.length][customers.length];
-            for (int i = 0; i < pricesCopy.length - 1; i++) {
+            for (int i = 0; i < pricesCopy.length; i++) {
                 System.arraycopy(pricesCopy[i], 0, prices[i], 0, pricesCopy[i].length);
             }
         } else if (diff < 0) {
@@ -73,9 +110,9 @@ public class TransportProblem {
                 System.arraycopy(pricesCopy[i], 0, prices[i], 0, pricesCopy[i].length);
             }
         }
-        ArrayUtils.printArray(dilers);
-        ArrayUtils.printArray(customers);
-        ArrayUtils.printArray(prices);
+        ArrayUtils.printArray(dilers, "Дилеры");
+        ArrayUtils.printArray(customers, "Кастомеры");
+        ArrayUtils.printArray(prices, "Цены");
         if (plan.equals(SupportPlan.METHOD_NORTWEST_ANGLE)) {
             supportPlan = nordWestAngle();
         } else {
@@ -85,9 +122,10 @@ public class TransportProblem {
         for (int i = 0; i < supportPlan.length; i++) {
             System.arraycopy(supportPlan[i], 0, supportPlanOrigional[i], 0, supportPlan[i].length);
         }
+        ArrayUtils.printArray(supportPlan, "Начальный план");
         System.out.println(getCost(supportPlan));
         System.out.println("m + n - 1: " + (dilers.length + customers.length - 1));
-        System.out.println("Число базисных клеток: " + ArrayUtils.getNoZeroValuesCount(supportPlan));
+        System.out.println("Число базисных клеток: " + ArrayUtils.getNoNaNValuesCount(supportPlan));
     }
 
     public float[][] getSupportPlane() {
@@ -115,6 +153,7 @@ public class TransportProblem {
                 break;
             }
         }
+        zeroLoad(result);
         return result;
     }
 
@@ -149,7 +188,67 @@ public class TransportProblem {
             }
         }
         ArrayUtils.zeroToNan(result);
+        zeroLoad(result);
         return result;
+    }
+
+    private void zeroLoad(float[][] result) {
+        int count = ArrayUtils.getNoNaNValuesCount(result);
+        int difference = (dilers.length + customers.length - 1) - count;
+
+        float[][] helpMatr = new float[dilers.length][customers.length];
+        for (int i = 0; i < dilers.length; i++) {
+            for (int j = 0; j < customers.length; j++) {
+                if (result[i][j] == result[i][j]) {
+                    helpMatr[i][j] = prices[i][j];
+                } else {
+                    helpMatr[i][j] = Float.NaN;
+                }
+            }
+        }
+        float[] U = new float[dilers.length];
+        float[] V = new float[customers.length];
+        findUV(U, V, helpMatr);
+        float[][] SMatr = makeSMatr(helpMatr, U, V);
+
+        List<Point> minElements = new ArrayList<>();
+        while (difference-- > 0) {
+            minElements = getElements(SMatr, minElements);
+        }
+
+        for (Point p : minElements) {
+            System.out.println(p);
+            if (p.x != -1) {
+                result[p.x][p.y] = 0;
+            }
+        }
+    }
+
+    private List<Point> getElements(float[][] matr, List<Point> already) {
+        int indexI = -1;
+        int indexJ = -1;
+        float min;
+        min = isSeachingForMaximum ? Float.MIN_VALUE : Float.MAX_VALUE;
+        for (int i = 0; i < matr.length; i++) {
+            for (int j = 0; j < matr[i].length; j++) {
+                if (isSeachingForMaximum) {
+                    if ((matr[i][j] == matr[i][j]) && (matr[i][j] > min) && (!already.contains(new Point(i, j)))) {
+                        min = matr[i][j];
+                        indexI = i;
+                        indexJ = j;
+                    }
+                } else {
+                    if ((matr[i][j] == matr[i][j]) && (matr[i][j] < min) && (!already.contains(new Point(i, j)))) {
+                        min = matr[i][j];
+                        indexI = i;
+                        indexJ = j;
+                    }
+                }
+
+            }
+        }
+        already.add(new Point(indexI, indexJ));
+        return already;
     }
 
     private Point findElement(boolean[][] notYetChecked, float[][] prices) {
@@ -221,11 +320,8 @@ public class TransportProblem {
         float[] V = new float[customers.length];
         findUV(U, V, helpMatr);
         float[][] SMatr = makeSMatr(helpMatr, U, V);
-        System.out.println("Матрица оценок");
-        ArrayUtils.printArray(SMatr);
         if (isSeachingForMaximum) {
-            while (!ArrayUtils.isAllPositive(SMatr)) {
-                System.err.println("MAXXXXXXXXXXX");
+            while (!ArrayUtils.isAllNegative(SMatr)) {
                 roll(supportPlan, SMatr);
                 for (i = 0; i < dilers.length; i++) {
                     for (j = 0; j < customers.length; j++) {
@@ -246,7 +342,6 @@ public class TransportProblem {
             }
         } else {
             while (!ArrayUtils.isAllPositive(SMatr)) {
-                System.err.println("MINNNNNNNNNNN");
                 roll(supportPlan, SMatr);
                 for (i = 0; i < dilers.length; i++) {
                     for (j = 0; j < customers.length; j++) {
@@ -304,23 +399,12 @@ public class TransportProblem {
         allowedPoints[allowedPoints.length - 1] = minInd;
         Point[] cycle = getCycle(minInd.x, minInd.y);
         float[] cycles = new float[cycle.length];
-        boolean[] bCycles = new boolean[cycle.length];
-        for (int i = 0; i < bCycles.length; i++) {
-            bCycles[i] = i != bCycles.length - 1;
-        }
-        min = isSeachingForMaximum ? Float.MIN_VALUE : Float.MAX_VALUE;
+        min = Float.MAX_VALUE;
         for (int i = 0; i < cycle.length; i++) {
             cycles[i] = m[cycle[i].x][cycle[i].y];
-            if (isSeachingForMaximum) {
-                if ((i % 2 == 0) && (cycles[i] == cycles[i]) && (cycles[i] >= min)) {
-                    min = cycles[i];
-                    minInd = cycle[i];
-                }
-            } else {
-                if ((i % 2 == 0) && (cycles[i] == cycles[i]) && (cycles[i] < min)) {
-                    min = cycles[i];
-                    minInd = cycle[i];
-                }
+            if ((i % 2 == 0) && (cycles[i] == cycles[i]) && (cycles[i] < min)) {
+                min = cycles[i];
+                minInd = cycle[i];
             }
             if (cycles[i] != cycles[i]) {
                 cycles[i] = 0;
@@ -366,6 +450,8 @@ public class TransportProblem {
                 resultMatr[i][j] = M[i][j];
                 if (Float.isNaN(resultMatr[i][j])) {
                     resultMatr[i][j] = prices[i][j] - (U[i] + V[j]);
+                } else {
+                    resultMatr[i][j] = prices[i][j] - (U[i] + V[j]);
                 }
             }
         }
@@ -392,21 +478,21 @@ public class TransportProblem {
             }
 
             if ((j == -1) && (i == -1)) {
-                for (int i1 = customers.length - 1; i1 >= 0; i1--) {
-                    if (!V1[i1] && !V2[i1]) {
-                        i = i1;
-                        V[i] = 0;
-                        V1[i] = true;
+                for (int j1 = 0; j1 < dilers.length; j1++) {
+                    if (!U1[j1] && !U2[j1]) {
+                        j = j1;
+                        U[j] = 0;
+                        U1[j] = true;
                         break;
                     }
                 }
             }
             if ((j == -1) && (i == -1)) {
-                for (int j1 = dilers.length - 1; j1 >= 0; j1--) {
-                    if (!U1[j1] && !U2[j1]) {
-                        j = j1;
-                        U[j] = 0;
-                        U1[j] = true;
+                for (int i1 = 0; i1 < customers.length; i1++) {
+                    if (!V1[i1] && !V2[i1]) {
+                        i = i1;
+                        V[i] = 0;
+                        V1[i] = true;
                         break;
                     }
                 }
@@ -449,11 +535,5 @@ public class TransportProblem {
             }
         }
         return sum;
-    }
-
-    private void generateTestData() {
-        dilers = new float[]{600, 180, 220};
-        customers = new float[]{270, 800, 110};
-        prices = new float[][]{{40, 30, 18}, {45, 28, 22}, {50, 22, 14}};
     }
 }

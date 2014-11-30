@@ -8,12 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -80,6 +77,17 @@ public class MainViewPanel extends javax.swing.JDialog {
             public Class getColumnClass(int columnIndex) {
                 return Float.class;
             }
+
+            @Override
+            public Object getValueAt(int row, int column) {
+                Object val = super.getValueAt(row, column); //To change body of generated methods, choose Tools | Templates.
+                if(Float.isNaN((Float)val)) {
+                    val = new String();
+                }
+                return val;
+            }
+            
+            
         };
         optimumPlanModel = new MyDefaultTableModel(new Object[][]{}, new String[]{}) {
             Class[] types = new Class[]{
@@ -108,9 +116,9 @@ public class MainViewPanel extends javax.swing.JDialog {
                 if (diff > 0) {
                     for (int i = 0; i < diff; i++) {
                         dilersModel.addRow(new Object[]{0});
-                        Integer[] data = new Integer[pricesModel.getColumnCount()];
+                        Float[] data = new Float[pricesModel.getColumnCount()];
                         for (int k = 0; k < data.length; k++) {
-                            data[k] = 0;
+                            data[k] = 0.0f;
                         }
                         pricesModel.addRow(data);
                     }
@@ -134,9 +142,9 @@ public class MainViewPanel extends javax.swing.JDialog {
                 if (diff > 0) {
                     for (int i = 0; i < diff; i++) {
                         customersModel.addRow(new Object[]{0});
-                        final Integer[] data = new Integer[pricesModel.getRowCount()];
+                        final Float[] data = new Float[pricesModel.getRowCount()];
                         for (int k = 0; k < pricesModel.getRowCount(); k++) {
-                            data[k] = 0;
+                            data[k] = 0.0f;
                         }
                         String name = "Поле " + pricesModel.getColumnCount();
                         pricesModel.addColumn(name, data);
@@ -262,11 +270,17 @@ public class MainViewPanel extends javax.swing.JDialog {
         supportPlanTable = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
         optimumPlanTable = new javax.swing.JTable();
+        solveButton = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         maxRadioBtn = new javax.swing.JRadioButton();
         minRadioBtn = new javax.swing.JRadioButton();
+        jPanel4 = new javax.swing.JPanel();
         nordWestRadioBtn = new javax.swing.JRadioButton();
         minElementRadioBtn = new javax.swing.JRadioButton();
-        solveButton = new javax.swing.JButton();
+        supportPlanLabel = new javax.swing.JLabel();
+        optimumPlanLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -321,16 +335,16 @@ public class MainViewPanel extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
                     .addComponent(dilersSpinner, javax.swing.GroupLayout.Alignment.LEADING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(customersSpinner)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(375, 375, 375))
@@ -355,7 +369,7 @@ public class MainViewPanel extends javax.swing.JDialog {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
                     .addComponent(jScrollPane3))
                 .addContainerGap())
@@ -363,6 +377,7 @@ public class MainViewPanel extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Ввод данных", jPanel2);
 
+        jScrollPane4.setBorder(javax.swing.BorderFactory.createTitledBorder("Опорный план"));
         jScrollPane4.setName("Опорный план"); // NOI18N
         jScrollPane4.setRequestFocusEnabled(false);
 
@@ -377,6 +392,8 @@ public class MainViewPanel extends javax.swing.JDialog {
         supportPlanTable.setEnabled(false);
         jScrollPane4.setViewportView(supportPlanTable);
 
+        jScrollPane5.setBorder(javax.swing.BorderFactory.createTitledBorder("Оптимальный план"));
+
         optimumPlanTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -388,20 +405,74 @@ public class MainViewPanel extends javax.swing.JDialog {
         optimumPlanTable.setEnabled(false);
         jScrollPane5.setViewportView(optimumPlanTable);
 
-        maxRadioBtn.setText("Решать на максимум");
-
-        minRadioBtn.setText("Решать на минимум");
-
-        nordWestRadioBtn.setText("Метод северо-западного угла");
-
-        minElementRadioBtn.setText("Метод минимального(максимального) элемента");
-
-        solveButton.setText("Решить");
+        solveButton.setText("Найти решение");
         solveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 solveButtonActionPerformed(evt);
             }
         });
+
+        jLabel4.setText("Значение функции: ");
+
+        jLabel5.setText("Значение функции: ");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Решать задачу на"));
+
+        maxRadioBtn.setText("Решать на максимум");
+
+        minRadioBtn.setText("Решать на минимум");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(maxRadioBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                    .addComponent(minRadioBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(maxRadioBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(minRadioBtn)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Поиск опорного плана"));
+
+        nordWestRadioBtn.setText("Метод северо-западного угла");
+
+        minElementRadioBtn.setText("Метод минимального(максимального) элемента");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nordWestRadioBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minElementRadioBtn))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(nordWestRadioBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(minElementRadioBtn)
+                .addContainerGap())
+        );
+
+        supportPlanLabel.setText("0");
+
+        optimumPlanLabel.setText("0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -409,42 +480,53 @@ public class MainViewPanel extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(maxRadioBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(minRadioBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(minElementRadioBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(nordWestRadioBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(solveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(239, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(supportPlanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(optimumPlanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(solveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(131, 131, 131))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(supportPlanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(optimumPlanLabel)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(maxRadioBtn)
-                            .addComponent(nordWestRadioBtn))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(minRadioBtn)
-                            .addComponent(minElementRadioBtn)))
-                    .addComponent(solveButton, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE))
-                .addGap(48, 48, 48))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(solveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Результат", jPanel3);
@@ -533,8 +615,11 @@ public class MainViewPanel extends javax.swing.JDialog {
 
     private void solveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_solveButtonActionPerformed
         float[] dilers = getDilersTableData();
+//        ArrayUtils.printArray(dilers, "dilers");
         float[] customers = getCustomersTableData();
+//        ArrayUtils.printArray(customers, "customers");
         float[][] prices = getPricesTableData();
+//        ArrayUtils.printArray(prices, "prices");
         if (dilers.length == 0 || customers.length == 0) {
             JOptionPane.showMessageDialog(rootPane, "Таблица не заполнена полностью!", "Ошибка", JOptionPane.ERROR_MESSAGE);
             return;
@@ -542,13 +627,9 @@ public class MainViewPanel extends javax.swing.JDialog {
         SupportPlan sp = (nordWestRadioBtn.isSelected()) ? SupportPlan.METHOD_NORTWEST_ANGLE : SupportPlan.METHOD_MINIMUM_ELEMENT;
         TransportProblem tp = new TransportProblem(dilers, customers, prices, sp, maxRadioBtn.isSelected());
         float[][] optimum = tp.solveProblem();
-        System.out.println("Оптимальный план: ");
-        ArrayUtils.printArray(optimum);
-        System.out.println(tp.getCost(optimum));
+        optimumPlanLabel.setText(String.valueOf(tp.getCost(optimum)));
         float[][] supportPlanGet = tp.getSupportPlane();
-        System.out.println("Начальный опорный план: ");
-        ArrayUtils.printArray(supportPlanGet);
-        ArrayUtils.nanToZero(supportPlanGet);
+        supportPlanLabel.setText(String.valueOf(tp.getCost(supportPlanGet)));
         Float[][] supportPlane = new Float[supportPlanGet.length][];
         supportPlanModel = new DefaultTableModel();
         supportPlanTable.setModel(supportPlanModel);
@@ -656,8 +737,12 @@ public class MainViewPanel extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -668,9 +753,11 @@ public class MainViewPanel extends javax.swing.JDialog {
     private javax.swing.JRadioButton minElementRadioBtn;
     private javax.swing.JRadioButton minRadioBtn;
     private javax.swing.JRadioButton nordWestRadioBtn;
+    private javax.swing.JLabel optimumPlanLabel;
     private javax.swing.JTable optimumPlanTable;
     private javax.swing.JTable pricesTable;
     private javax.swing.JButton solveButton;
+    private javax.swing.JLabel supportPlanLabel;
     private javax.swing.JTable supportPlanTable;
     // End of variables declaration//GEN-END:variables
 }

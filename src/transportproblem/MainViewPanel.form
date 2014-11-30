@@ -61,18 +61,18 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
-                          <Component id="jLabel1" alignment="0" pref="120" max="32767" attributes="0"/>
+                          <Component id="jLabel1" alignment="0" pref="144" max="32767" attributes="0"/>
                           <Component id="dilersSpinner" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="customersSpinner" max="32767" attributes="0"/>
-                          <Component id="jLabel2" pref="120" max="32767" attributes="0"/>
+                          <Component id="jLabel2" pref="146" max="32767" attributes="0"/>
                           <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane3" pref="600" max="32767" attributes="0"/>
+                          <Component id="jScrollPane3" pref="622" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jLabel3" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="375" max="-2" attributes="0"/>
@@ -105,7 +105,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane2" pref="424" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" pref="442" max="32767" attributes="0"/>
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
                           <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -205,53 +205,69 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane4" min="-2" pref="405" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane5" pref="0" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jLabel4" min="-2" pref="138" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="supportPlanLabel" min="-2" pref="127" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jScrollPane4" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane5" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="jLabel5" min="-2" pref="138" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="optimumPlanLabel" min="-2" pref="127" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="maxRadioBtn" max="32767" attributes="0"/>
-                          <Component id="minRadioBtn" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="minElementRadioBtn" max="32767" attributes="0"/>
-                          <Component id="nordWestRadioBtn" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="solveButton" min="-2" pref="151" max="-2" attributes="0"/>
-                      <EmptySpace pref="239" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="jPanel1" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Component id="jPanel4" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="solveButton" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="131" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane5" pref="376" max="32767" attributes="0"/>
+                          <Component id="jScrollPane5" pref="380" max="32767" attributes="0"/>
                           <Component id="jScrollPane4" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="supportPlanLabel" alignment="3" min="-2" pref="14" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                              <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="optimumPlanLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="maxRadioBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="nordWestRadioBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="minRadioBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="minElementRadioBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jPanel1" max="32767" attributes="0"/>
+                                  <Component id="jPanel4" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="solveButton" pref="48" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="solveButton" min="-2" pref="45" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -259,6 +275,11 @@
           <SubComponents>
             <Container class="javax.swing.JScrollPane" name="jScrollPane4">
               <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="&#x41e;&#x43f;&#x43e;&#x440;&#x43d;&#x44b;&#x439; &#x43f;&#x43b;&#x430;&#x43d;"/>
+                  </Border>
+                </Property>
                 <Property name="name" type="java.lang.String" value="&#x41e;&#x43f;&#x43e;&#x440;&#x43d;&#x44b;&#x439; &#x43f;&#x43b;&#x430;&#x43d;" noResource="true"/>
                 <Property name="requestFocusEnabled" type="boolean" value="false"/>
               </Properties>
@@ -276,6 +297,13 @@
               </SubComponents>
             </Container>
             <Container class="javax.swing.JScrollPane" name="jScrollPane5">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="&#x41e;&#x43f;&#x442;&#x438;&#x43c;&#x430;&#x43b;&#x44c;&#x43d;&#x44b;&#x439; &#x43f;&#x43b;&#x430;&#x43d;"/>
+                  </Border>
+                </Property>
+              </Properties>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
@@ -289,33 +317,127 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JRadioButton" name="maxRadioBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&#x420;&#x435;&#x448;&#x430;&#x442;&#x44c; &#x43d;&#x430; &#x43c;&#x430;&#x43a;&#x441;&#x438;&#x43c;&#x443;&#x43c;"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JRadioButton" name="minRadioBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&#x420;&#x435;&#x448;&#x430;&#x442;&#x44c; &#x43d;&#x430; &#x43c;&#x438;&#x43d;&#x438;&#x43c;&#x443;&#x43c;"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JRadioButton" name="nordWestRadioBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&#x41c;&#x435;&#x442;&#x43e;&#x434; &#x441;&#x435;&#x432;&#x435;&#x440;&#x43e;-&#x437;&#x430;&#x43f;&#x430;&#x434;&#x43d;&#x43e;&#x433;&#x43e; &#x443;&#x433;&#x43b;&#x430;"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JRadioButton" name="minElementRadioBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&#x41c;&#x435;&#x442;&#x43e;&#x434; &#x43c;&#x438;&#x43d;&#x438;&#x43c;&#x430;&#x43b;&#x44c;&#x43d;&#x43e;&#x433;&#x43e;(&#x43c;&#x430;&#x43a;&#x441;&#x438;&#x43c;&#x430;&#x43b;&#x44c;&#x43d;&#x43e;&#x433;&#x43e;) &#x44d;&#x43b;&#x435;&#x43c;&#x435;&#x43d;&#x442;&#x430;"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JButton" name="solveButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&#x420;&#x435;&#x448;&#x438;&#x442;&#x44c;"/>
+                <Property name="text" type="java.lang.String" value="&#x41d;&#x430;&#x439;&#x442;&#x438; &#x440;&#x435;&#x448;&#x435;&#x43d;&#x438;&#x435;"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="solveButtonActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel4">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#x417;&#x43d;&#x430;&#x447;&#x435;&#x43d;&#x438;&#x435; &#x444;&#x443;&#x43d;&#x43a;&#x446;&#x438;&#x438;: "/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel5">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#x417;&#x43d;&#x430;&#x447;&#x435;&#x43d;&#x438;&#x435; &#x444;&#x443;&#x43d;&#x43a;&#x446;&#x438;&#x438;: "/>
+              </Properties>
+            </Component>
+            <Container class="javax.swing.JPanel" name="jPanel1">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="&#x420;&#x435;&#x448;&#x430;&#x442;&#x44c; &#x437;&#x430;&#x434;&#x430;&#x447;&#x443; &#x43d;&#x430;"/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="maxRadioBtn" pref="170" max="32767" attributes="0"/>
+                              <Component id="minRadioBtn" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="maxRadioBtn" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="minRadioBtn" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JRadioButton" name="maxRadioBtn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="&#x420;&#x435;&#x448;&#x430;&#x442;&#x44c; &#x43d;&#x430; &#x43c;&#x430;&#x43a;&#x441;&#x438;&#x43c;&#x443;&#x43c;"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JRadioButton" name="minRadioBtn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="&#x420;&#x435;&#x448;&#x430;&#x442;&#x44c; &#x43d;&#x430; &#x43c;&#x438;&#x43d;&#x438;&#x43c;&#x443;&#x43c;"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="jPanel4">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="&#x41f;&#x43e;&#x438;&#x441;&#x43a; &#x43e;&#x43f;&#x43e;&#x440;&#x43d;&#x43e;&#x433;&#x43e; &#x43f;&#x43b;&#x430;&#x43d;&#x430;"/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="nordWestRadioBtn" alignment="0" min="-2" pref="267" max="-2" attributes="0"/>
+                              <Component id="minElementRadioBtn" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="nordWestRadioBtn" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="minElementRadioBtn" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JRadioButton" name="nordWestRadioBtn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="&#x41c;&#x435;&#x442;&#x43e;&#x434; &#x441;&#x435;&#x432;&#x435;&#x440;&#x43e;-&#x437;&#x430;&#x43f;&#x430;&#x434;&#x43d;&#x43e;&#x433;&#x43e; &#x443;&#x433;&#x43b;&#x430;"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JRadioButton" name="minElementRadioBtn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="&#x41c;&#x435;&#x442;&#x43e;&#x434; &#x43c;&#x438;&#x43d;&#x438;&#x43c;&#x430;&#x43b;&#x44c;&#x43d;&#x43e;&#x433;&#x43e;(&#x43c;&#x430;&#x43a;&#x441;&#x438;&#x43c;&#x430;&#x43b;&#x44c;&#x43d;&#x43e;&#x433;&#x43e;) &#x44d;&#x43b;&#x435;&#x43c;&#x435;&#x43d;&#x442;&#x430;"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Component class="javax.swing.JLabel" name="supportPlanLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="optimumPlanLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="0"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

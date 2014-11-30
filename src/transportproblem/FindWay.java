@@ -19,18 +19,25 @@ public class FindWay {
     Point[] mAllowed;
     Point beginning;
     boolean flag;
+    int iteration;
 
     public FindWay(int x, int y, boolean _flag, Point[] _mAllowed, Point _Beg, FindWay _Father) {
+        this(x, y, _flag, _mAllowed, _Beg, _Father, 0);
+    }
+
+    public FindWay(int x, int y, boolean _flag, Point[] _mAllowed, Point _Beg, FindWay _Father, int iter) {
         beginning = _Beg;
         flag = _flag;
         root = new Point(x, y);
         mAllowed = _mAllowed;
         father = _Father;
+        iteration = iter;
     }
 
     public boolean BuildTree() {
+
         Point[] ps = new Point[mAllowed.length];
-        for(int s = 0 ; s < ps.length; s++) {
+        for (int s = 0; s < ps.length; s++) {
             ps[s] = new Point();
         }
         int Count = 0;
@@ -55,7 +62,7 @@ public class FindWay {
                 continue;
             }
             if (ps[i].equals(beginning)) {
-                while (fwu != null) {
+                while (fwu != null && k < mAllowed.length) {
                     mAllowed[k] = fwu.root;
                     fwu = fwu.father;
                     k++;
@@ -67,7 +74,7 @@ public class FindWay {
             }
 
             if (!isAllStartPoints(ps)) {
-                childrens[i] = new FindWay(ps[i].x, ps[i].y, !flag, mAllowed, beginning, this);
+                childrens[i] = new FindWay(ps[i].x, ps[i].y, !flag, mAllowed, beginning, this, ++iteration);
                 Boolean result = childrens[i].BuildTree();
                 if (result) {
                     return true;
@@ -79,9 +86,9 @@ public class FindWay {
 
     private static boolean isAllStartPoints(Point[] points) {
         for (Point point : points) {
-                if (point.x != 0 || point.y != 0) {
-                    return false;
-                }
+            if (point.x != 0 || point.y != 0) {
+                return false;
+            }
         }
         return true;
     }

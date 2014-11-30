@@ -43,11 +43,11 @@ public class ArrayUtils {
         }
         return true;
     }
-    
+
     public static boolean isAllNegative(float[][] array) {
         for (int i = 0; (i < array.length); i++) {
             for (int j = 0; (j < array[i].length); j++) {
-                if (array[i][j] >= 0) {
+                if (array[i][j] > 0) {
                     return false;
                 }
             }
@@ -64,11 +64,11 @@ public class ArrayUtils {
         return true;
     }
 
-    public static int getNoZeroValuesCount(float[][] array) {
+    public static int getNoNaNValuesCount(float[][] array) {
         int count = 0;
         for (int i = 0; i < array.length; i++) {
             for (int j = 0; j < array[i].length; j++) {
-                if (!Float.isNaN(array[i][j]) && array[i][j] != 0) {
+                if (!Float.isNaN(array[i][j])) {
                     count++;
                 }
             }
@@ -93,7 +93,10 @@ public class ArrayUtils {
         return sum;
     }
 
-    public static void printArray(float[][] array) {
+    public static void printArray(float[][] array, String name) {
+        if (name != null) {
+            System.out.println(name);
+        }
         for (int i = 0; i < array.length; i++) {
             for (int j = 0; j < array[0].length; j++) {
                 System.out.print(array[i][j] + "\t");
@@ -102,7 +105,17 @@ public class ArrayUtils {
         }
     }
 
-    public static void printArray(float[] array) {
+    public static void printArray(float[] array, String name) {
+        if (name != null) {
+            System.out.println(name);
+        }
+        System.out.println(Arrays.toString(array));
+    }
+    
+     public static void printArray(boolean[] array, String name) {
+        if (name != null) {
+            System.out.println(name);
+        }
         System.out.println(Arrays.toString(array));
     }
 }
